@@ -1,7 +1,3 @@
-Here's a refactored and optimized version of your GitHub README. It improves clarity, formatting, and consistency, while keeping the guide beginner-friendly and concise:
-
----
-
 # 🚀 Apache Kafka (KRaft Mode) Setup on Windows
 
 This guide walks you through setting up **Apache Kafka in KRaft mode (no ZooKeeper)** on a Windows machine.
