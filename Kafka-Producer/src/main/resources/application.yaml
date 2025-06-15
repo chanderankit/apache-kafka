@@ -1,0 +1,24 @@
+server:
+  port: 8081
+
+spring:
+  kafka:
+    producer:
+      bootstrap-servers: localhost:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      acks: all   # How many broker acknowledgments the producer waits for | `all` (waits for all replicas)
+      retries: 5  # Number of retries if send fails
+      retry.backoff-ms: 100 # Time between retries
+      properties:
+        enable.idempotence: true  #Ensures exactly-once delivery by deduplication
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, metrics, prometheus
+  metrics:
+    export:
+      prometheus:
+        enabled: true
