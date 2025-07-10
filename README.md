@@ -95,3 +95,57 @@ You now have a fully functioning Kafka setup using **KRaft mode** on Windows �
   * Broker ID
   * Advertised listeners
   * Other Kafka settings
+
+---
+
+# ✅ Kafka Config Cheat Sheet (for Interviews & Daily Use)
+
+---
+
+## 🔹 General Configs
+
+| Config | Description | Example |
+|--------|-------------|---------|
+| `bootstrap.servers` | List of Kafka broker addresses | `spring.kafka.bootstrap-servers=localhost:9092` |
+
+---
+
+## 🔹 Producer Configs
+
+| Config | Purpose | Example | Notes |
+|--------|---------|---------|-------|
+| `acks` | Message durability level | `all`, `1`, `0` | `all` = safest |
+| `retries` | Retry count on failure | `spring.kafka.producer.retries=3` | Avoids transient failures |
+| `batch.size` | Max bytes to batch before sending | `spring.kafka.producer.batch-size=16384` | Batching = better throughput |
+| `linger.ms` | Time to wait before sending batch | `spring.kafka.producer.linger-ms=5` | Small delay for better batching |
+| `compression.type` | Compress payload to reduce size | `gzip`, `snappy`, `lz4`, `zstd` | Works after serialization |
+| `enable.idempotence` | Avoid duplicate messages | `spring.kafka.producer.properties.enable.idempotence=true` | Enables exactly-once |
+| `max.request.size` | Max size of a message request | (if needed) | Increase for large messages |
+
+---
+
+## 🔹 Consumer Configs
+
+| Config | Purpose | Example | Notes |
+|--------|---------|---------|-------|
+| `group.id` | Group of consumers sharing work | `spring.kafka.consumer.group-id=my-group` | Enables load balancing |
+| `auto.offset.reset` | Where to read from if no offset exists | `earliest`, `latest`, `none` | `earliest` = from beginning |
+| `enable.auto.commit` | Auto-commit offsets? | `false` = manual commit | Manual commit is safer |
+| `max.poll.records` | Max records per poll() | `spring.kafka.consumer.max-poll-records=500` | Helps control processing batch size |
+| `session.timeout.ms` | Max time before consumer considered dead | `spring.kafka.consumer.session-timeout-ms=10000` | Must be > heartbeat |
+| `heartbeat.interval.ms` | Time between heartbeats | `spring.kafka.consumer.heartbeat-interval-ms=3000` | Ping to Kafka |
+| `max.poll.interval.ms` | Max time between polls | Default: 5 min | Exceeding causes rebalance |
+
+---
+
+## 🔹 Performance Tuning Scenarios
+
+| Goal | Key Configs |
+|------|-------------|
+| **High throughput** | `batch.size`, `linger.ms`, `compression.type`, `acks=1` |
+| **Low latency** | `linger.ms=0`, low `batch.size` |
+| **High durability** | `acks=all`, `retries`, `enable.idempotence=true` |
+| **Avoid duplicates** | `enable.idempotence=true`, proper retry logic |
+| **Handle slow consumers** | `max.poll.interval.ms`, `session.timeout.ms` |
+
+---
